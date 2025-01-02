@@ -10,9 +10,11 @@ async function copyFolder(source, destination) {
     });
 
     for (const content of destinationContents) {
-      const filePath = path.join(destination, content.name);
+      const contentPath = path.join(destination, content.name);
       if (content.isFile()) {
-        await fs.unlink(filePath);
+        await fs.unlink(contentPath);
+      } else if (content.isDirectory()) {
+        await fs.rm(contentPath, { recursive: true });
       }
     }
 
@@ -24,10 +26,14 @@ async function copyFolder(source, destination) {
 
       if (content.isFile()) {
         await fs.copyFile(sourcePath, destinationPath);
+      } else if (content.isDirectory()) {
+        await copyFolder(sourcePath, destinationPath);
       }
     }
 
-    process.stdout.write('All the files have been successfully copied');
+    process.stdout.write(
+      `Folder ${source} and all of its contents has been successfully copied\n`,
+    );
   } catch (error) {
     process.stdout.write(`Error: ${error.message}`);
   }
