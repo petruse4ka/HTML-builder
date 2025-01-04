@@ -1,7 +1,13 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
+const { createReadStream, createWriteStream } = require('node:fs');
 
-async function bundleHtml(source, destination, components) {
+async function bundleProject(
+  htmlSource,
+  stylesSource,
+  destination,
+  components,
+) {
   try {
     await fs.mkdir(destination, { recursive: true });
 
@@ -18,8 +24,9 @@ async function bundleHtml(source, destination, components) {
       }
     }
 
-    const templateContent = await fs.readFile(source, 'utf-8');
+    const templateContent = await fs.readFile(htmlSource, 'utf-8');
     const indexFilePath = path.join(destination, 'index.html');
+    const indexFileName = path.basename(indexFilePath);
 
     await fs.writeFile(indexFilePath, templateContent, 'utf-8');
 
@@ -43,15 +50,49 @@ async function bundleHtml(source, destination, components) {
     await fs.writeFile(indexFilePath, indexFileContent, 'utf-8');
 
     process.stdout.write(
-      `File ${indexFilePath} has been successfully bundled.\n`,
+      `File ${indexFileName} has been successfully created in ${destination}.\n`,
     );
+
+    const writePath = path.join(destination, 'style.css');
+    const writeFileName = path.basename(writePath);
+    const writeStream = createWriteStream(writePath, 'utf-8');
+    const sourceContent = await fs.readdir(stylesSource, {
+      withFileTypes: true,
+    });
+
+    for (const content of sourceContent) {
+      const contentPath = path.join(stylesSource, content.name);
+      const contentExtension = path.extname(contentPath);
+
+      if (content.isFile() && contentExtension === '.css') {
+        const readStream = createReadStream(contentPath, 'utf-8');
+
+        for await (const chunk of readStream) {
+          writeStream.write(`${chunk}\n`);
+        }
+      }
+    }
+
+    writeStream.end();
+
+    writeStream.on('finish', () => {
+      process.stdout.write(
+        `File ${writeFileName} has been successfully created in ${destination}.\n`,
+      );
+    });
   } catch (error) {
     process.stdout.write(`Error: ${error.message}`);
   }
 }
 
+const stylesSourcePath = path.join(__dirname, 'styles');
 const componentsPath = path.join(__dirname, 'components');
-const sourcePath = path.join(__dirname, 'template.html');
+const htmlSourcePath = path.join(__dirname, 'template.html');
 const destinationPath = path.join(__dirname, 'projects-dist');
 
-bundleHtml(sourcePath, destinationPath, componentsPath);
+bundleProject(
+  htmlSourcePath,
+  stylesSourcePath,
+  destinationPath,
+  componentsPath,
+);
