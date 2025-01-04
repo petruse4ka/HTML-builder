@@ -7,7 +7,7 @@ const writeStream = fs.createWriteStream(writeFile);
 process.stdin.setEncoding('utf-8');
 
 process.stdout.write(
-  'Tell us what you want to add to the text file? When you want to finalize the creation of the file, type "exit" or press Ctrl+C.\n',
+  'Type in the console what you want to add to the text file? When you want to finalize the creation of the file, type "exit" in the console or press Ctrl+C.\n',
 );
 
 process.stdin.on('data', (text) => {
