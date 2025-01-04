@@ -33,7 +33,7 @@ async function bundleHtml(source, destination, components) {
       `File ${indexFileName} has been successfully created in ${destination}.\n`,
     );
   } catch (error) {
-    process.stdout.write(`Error: ${error.message}`);
+    process.stdout.write(`bundleHtml error: ${error.message}`);
   }
 }
 
@@ -47,6 +47,7 @@ async function bundleStyles(source, destination) {
     for (const content of sourceContent) {
       const contentPath = path.join(source, content.name);
       const contentExtension = path.extname(contentPath);
+      const contentName = path.basename(contentPath);
 
       if (content.isFile() && contentExtension === '.css') {
         const readStream = createReadStream(contentPath, 'utf-8');
@@ -55,7 +56,7 @@ async function bundleStyles(source, destination) {
           writeStream.write(`${chunk}\n`);
         }
         process.stdout.write(
-          `${contentPath} is successfully merged into ${writeFileName}\n`,
+          `${contentName} is successfully merged into ${writeFileName}\n`,
         );
       }
     }
@@ -68,7 +69,7 @@ async function bundleStyles(source, destination) {
       );
     });
   } catch (error) {
-    process.stdout.write(`Error: ${error.message}`);
+    process.stdout.write(`bundleStyles error: ${error.message}`);
   }
 }
 
@@ -93,7 +94,7 @@ async function bundleAssets(source, destination) {
       `Folder ${source} and all of its contents has been successfully copied in ${destination}.\n`,
     );
   } catch (error) {
-    process.stdout.write(`Error: ${error.message}`);
+    process.stdout.write(`bundleAssets error: ${error.message}`);
   }
 }
 
@@ -124,7 +125,7 @@ async function bundleProject(
     await bundleStyles(stylesSource, destination);
     await bundleAssets(assetsSources, assetsDestination);
   } catch (error) {
-    process.stdout.write(`Error: ${error.message}\n`);
+    process.stdout.write(`bundleProject error: ${error.message}\n`);
   }
 }
 
