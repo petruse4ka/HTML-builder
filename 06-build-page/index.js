@@ -56,7 +56,7 @@ async function bundleStyles(source, destination) {
           writeStream.write(`${chunk}\n`);
         }
         process.stdout.write(
-          `${contentName} is successfully merged into ${writeFileName}\n`,
+          `${contentName} is successfully compiled into ${writeFileName}\n`,
         );
       }
     }

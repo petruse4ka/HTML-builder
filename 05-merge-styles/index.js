@@ -25,6 +25,7 @@ async function mergeStyles(source, destination) {
     for (const content of sourceContent) {
       const contentPath = path.join(source, content.name);
       const contentExtension = path.extname(contentPath);
+      const contentName = path.basename(contentPath);
 
       if (content.isFile() && contentExtension === '.css') {
         const readStream = createReadStream(contentPath, 'utf-8');
@@ -33,7 +34,7 @@ async function mergeStyles(source, destination) {
           writeStream.write(`${chunk}\n`);
         }
         process.stdout.write(
-          `${contentPath} is successfully merged into ${writeFileName}\n`,
+          `${contentName} is successfully compiled into ${writeFileName}\n`,
         );
       }
     }
