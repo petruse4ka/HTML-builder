@@ -72,11 +72,38 @@ async function bundleStyles(source, destination) {
   }
 }
 
+async function bundleAssets(source, destination) {
+  try {
+    await fs.mkdir(destination, { recursive: true });
+
+    const sourceContents = await fs.readdir(source, { withFileTypes: true });
+
+    for (const content of sourceContents) {
+      const sourcePath = path.join(source, content.name);
+      const destinationPath = path.join(destination, content.name);
+
+      if (content.isFile()) {
+        await fs.copyFile(sourcePath, destinationPath);
+      } else if (content.isDirectory()) {
+        await bundleAssets(sourcePath, destinationPath);
+      }
+    }
+
+    process.stdout.write(
+      `Folder ${source} and all of its contents has been successfully copied in ${destination}.\n`,
+    );
+  } catch (error) {
+    process.stdout.write(`Error: ${error.message}`);
+  }
+}
+
 async function bundleProject(
   htmlSource,
   stylesSource,
+  assetsSources,
   destination,
   components,
+  assetsDestination,
 ) {
   try {
     await fs.mkdir(destination, { recursive: true });
@@ -95,6 +122,7 @@ async function bundleProject(
 
     await bundleHtml(htmlSource, destination, components);
     await bundleStyles(stylesSource, destination);
+    await bundleAssets(assetsSources, assetsDestination);
   } catch (error) {
     process.stdout.write(`Error: ${error.message}\n`);
   }
@@ -104,10 +132,14 @@ const stylesSourcePath = path.join(__dirname, 'styles');
 const componentsPath = path.join(__dirname, 'components');
 const htmlSourcePath = path.join(__dirname, 'template.html');
 const destinationPath = path.join(__dirname, 'project-dist');
+const assetsSourcePath = path.join(__dirname, 'assets');
+const assetsDestinationPath = path.join(destinationPath, 'assets');
 
 bundleProject(
   htmlSourcePath,
   stylesSourcePath,
+  assetsSourcePath,
   destinationPath,
   componentsPath,
+  assetsDestinationPath,
 );
