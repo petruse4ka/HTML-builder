@@ -30,7 +30,7 @@ async function bundleHtml(source, destination, components) {
     await fs.writeFile(indexFilePath, indexFileContent, 'utf-8');
 
     process.stdout.write(
-      `File ${indexFileName} has been successfully created in ${destination}.\n`,
+      `File ${indexFileName} has been successfully created into ${destination}.\n`,
     );
   } catch (error) {
     process.stdout.write(`bundleHtml error: ${error.message}`);
@@ -56,7 +56,7 @@ async function bundleStyles(source, destination) {
           writeStream.write(`${chunk}\n`);
         }
         process.stdout.write(
-          `${contentName} is successfully compiled into ${writeFileName}\n`,
+          `${contentName} is successfully compiled into ${writeFileName}.\n`,
         );
       }
     }

@@ -32,7 +32,7 @@ async function copyFolder(source, destination) {
     }
 
     process.stdout.write(
-      `Folder ${source} and all of its contents has been successfully copied\n`,
+      `Folder ${source} and all of its contents has been successfully copied.\n`,
     );
   } catch (error) {
     process.stdout.write(`Error: ${error.message}`);

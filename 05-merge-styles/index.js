@@ -34,7 +34,7 @@ async function mergeStyles(source, destination) {
           writeStream.write(`${chunk}\n`);
         }
         process.stdout.write(
-          `${contentName} is successfully compiled into ${writeFileName}\n`,
+          `${contentName} is successfully compiled into ${writeFileName}.\n`,
         );
       }
     }

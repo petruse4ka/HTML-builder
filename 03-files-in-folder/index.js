@@ -14,7 +14,7 @@ async function showFileInfo(folder) {
 
         process.stdout.write(
           `${fileName} - ${fileExtension.slice(1)} - ${fileSize.toFixed(
-            2,
+            1,
           )}kb\n`,
         );
       }

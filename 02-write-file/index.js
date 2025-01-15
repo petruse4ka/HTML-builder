@@ -7,12 +7,12 @@ const writeStream = fs.createWriteStream(writeFile);
 process.stdin.setEncoding('utf-8');
 
 process.stdout.write(
-  'Type in the console what you want to add to the text file? When you want to finalize the creation of the file, type "exit" in the console or press Ctrl+C.\n',
+  'Type in the console what you want to add to the text file. When you want to finalize the creation of the file, type "exit" in the console or press Ctrl+C.\n',
 );
 
 process.stdin.on('data', (text) => {
   if (text.trim() === 'exit') {
-    process.stdout.write('Thank you, the file is created');
+    process.stdout.write('Thank you, the file is created.');
     writeStream.end();
     process.exit();
   } else {
@@ -25,7 +25,7 @@ process.stdin.on('data', (text) => {
 });
 
 process.on('SIGINT', () => {
-  process.stdout.write('Thank you, the file is created');
+  process.stdout.write('Thank you, the file is created.');
   writeStream.end();
   process.exit();
 });
